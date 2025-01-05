@@ -1,12 +1,34 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Button } from 'react-bootstrap';
+import { Button, Alert } from 'react-bootstrap';
+import "../App.css"
+
 
 const SubmitForm = ({ courseData, syllabusData }) => {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null); // For error handling
 
   const handleSubmit = async () => {
     setLoading(true);
+    setError(null); // Reset error state before submitting
+
+    // Validate course data
+    if (!courseData || !courseData.courseCode || !courseData.courseTitle) {
+      setError('Course Code and Title are required!');
+      setLoading(false);
+      return;
+    }
+
+    // Validate syllabus data
+    const syllabusValid = Object.keys(syllabusData).every(
+      key => syllabusData[key].trim() !== ''
+    );
+
+    if (!syllabusValid) {
+      setError('All syllabus fields must be filled!');
+      setLoading(false);
+      return;
+    }
 
     // Combine data from both forms
     const formData = {
@@ -16,28 +38,11 @@ const SubmitForm = ({ courseData, syllabusData }) => {
       objectives: courseData.objectives,
       outcomes: courseData.outcomes,
       overview: courseData.overview,
-      syllabus: [
-        {
-          title: 'Unit 1: Java Fundamentals',
-          description: syllabusData.unit1,
-          experiential_learning: syllabusData.unit1EL
-        },
-        {
-          title: 'Unit 2: Inheritance and Multithreading',
-          description: syllabusData.unit2,
-          experiential_learning: syllabusData.unit2EL
-        },
-        {
-          title: 'Unit 3: JDBC and Servlets',
-          description: syllabusData.unit3,
-          experiential_learning: syllabusData.unit3EL
-        },
-        {
-          title: 'Unit 4: JSP, Annotations, Frameworks',
-          description: syllabusData.unit4,
-          experiential_learning: syllabusData.unit4EL
-        }
-      ],
+      syllabus: Object.keys(syllabusData).map((unitKey, index) => ({
+        title: `Unit ${index + 1}: ${unitKey.replace(/([A-Z])/g, ' $1')}`,
+        description: syllabusData[unitKey],
+        experiential_learning: syllabusData[`${unitKey}EL`] || '',
+      })),
       textbooks: courseData.textbooks,
       references: courseData.references,
     };
@@ -54,6 +59,7 @@ const SubmitForm = ({ courseData, syllabusData }) => {
       document.body.appendChild(link);
       link.click();
     } catch (error) {
+      setError('Error generating PDF. Please try again later.');
       console.error('Error generating PDF:', error);
     } finally {
       setLoading(false);
@@ -62,6 +68,7 @@ const SubmitForm = ({ courseData, syllabusData }) => {
 
   return (
     <div className="text-center mt-4">
+      {error && <Alert variant="danger">{error}</Alert>} {/* Display error if any */}
       <Button onClick={handleSubmit} disabled={loading}>
         {loading ? 'Generating PDF...' : 'Generate PDF'}
       </Button>

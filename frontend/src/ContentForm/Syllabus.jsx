@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Form, Button, Collapse, Container, Row, Col } from "react-bootstrap";
 
-const Syllabus = ({ onSubmit }) => {
+function Syllabus({ onSubmit }) {
   const [formOpen, setFormOpen] = useState(true); // Default to expanded
   const [formData, setFormData] = useState({
     unit1: "",
@@ -14,15 +14,15 @@ const Syllabus = ({ onSubmit }) => {
     unit4EL: "",
   });
 
-  const handleChange = (e) => {
+  function handleChange(e) {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-  };
+  }
 
-  const handleFormSubmit = (e) => {
+  function handleFormSubmit(e) {
     e.preventDefault();
     onSubmit(formData); // Send form data to the parent component
-  };
+  }
 
   return (
     <Container className="d-flex justify-content-center align-items-center" style={{ paddingTop: "10px" }}>
@@ -43,7 +43,7 @@ const Syllabus = ({ onSubmit }) => {
             <div id="syllabus-form">
               <Form onSubmit={handleFormSubmit}>
                 {/* Unit 1 */}
-                <Form.Group controlId="unit1">
+                <Form.Group className="form-group" controlId="unit1">
                   <Form.Label>Unit 1</Form.Label>
                   <Form.Control
                     as="textarea"
@@ -56,7 +56,7 @@ const Syllabus = ({ onSubmit }) => {
                 </Form.Group>
 
                 {/* Unit 1 EL */}
-                <Form.Group controlId="unit1EL">
+                <Form.Group className="form-group" controlId="unit1EL">
                   <Form.Label>Unit 1 EL</Form.Label>
                   <Form.Control
                     as="textarea"
@@ -69,7 +69,7 @@ const Syllabus = ({ onSubmit }) => {
                 </Form.Group>
 
                 {/* Unit 2 */}
-                <Form.Group controlId="unit2">
+                <Form.Group className="form-group" controlId="unit2">
                   <Form.Label>Unit 2</Form.Label>
                   <Form.Control
                     as="textarea"
@@ -82,7 +82,7 @@ const Syllabus = ({ onSubmit }) => {
                 </Form.Group>
 
                 {/* Unit 2 EL */}
-                <Form.Group controlId="unit2EL">
+                <Form.Group className="form-group" controlId="unit2EL">
                   <Form.Label>Unit 2 EL</Form.Label>
                   <Form.Control
                     as="textarea"
@@ -95,7 +95,7 @@ const Syllabus = ({ onSubmit }) => {
                 </Form.Group>
 
                 {/* Unit 3 */}
-                <Form.Group controlId="unit3">
+                <Form.Group className="form-group" controlId="unit3">
                   <Form.Label>Unit 3</Form.Label>
                   <Form.Control
                     as="textarea"
@@ -108,7 +108,7 @@ const Syllabus = ({ onSubmit }) => {
                 </Form.Group>
 
                 {/* Unit 3 EL */}
-                <Form.Group controlId="unit3EL">
+                <Form.Group className="form-group" controlId="unit3EL">
                   <Form.Label>Unit 3 EL</Form.Label>
                   <Form.Control
                     as="textarea"
@@ -121,7 +121,7 @@ const Syllabus = ({ onSubmit }) => {
                 </Form.Group>
 
                 {/* Unit 4 */}
-                <Form.Group controlId="unit4">
+                <Form.Group className="form-group" controlId="unit4">
                   <Form.Label>Unit 4</Form.Label>
                   <Form.Control
                     as="textarea"
@@ -134,7 +134,7 @@ const Syllabus = ({ onSubmit }) => {
                 </Form.Group>
 
                 {/* Unit 4 EL */}
-                <Form.Group controlId="unit4EL">
+                <Form.Group className="form-group" controlId="unit4EL">
                   <Form.Label>Unit 4 EL</Form.Label>
                   <Form.Control
                     as="textarea"
@@ -145,6 +145,8 @@ const Syllabus = ({ onSubmit }) => {
                     placeholder="Enter Unit 4 EL content"
                   />
                 </Form.Group>
+
+                <Button variant="primary" type="submit">Submit</Button>
               </Form>
             </div>
           </Collapse>
@@ -152,6 +154,6 @@ const Syllabus = ({ onSubmit }) => {
       </Row>
     </Container>
   );
-};
+}
 
 export default Syllabus;

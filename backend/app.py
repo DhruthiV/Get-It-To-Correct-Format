@@ -7,7 +7,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 import io
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=["http://localhost:5173"])
 
 @app.route('/generate-pdf', methods=['POST'])
 def generate_pdf():
@@ -53,30 +53,32 @@ def generate_pdf():
     for unit in data['syllabus']:
         elements.append(Spacer(1, 12))
         elements.append(Paragraph(unit['title'], heading_style))  # Unit Title
-        elements.append(Paragraph(unit['description'], normal_style))  # Description
+        elements.append(Paragraph(str(unit['description']), normal_style))  # Description
         elements.append(Paragraph(f"Experiential Learning: {unit['experiential_learning']}", normal_style))
     elements.append(Spacer(1, 12))
 
     # Textbooks
     elements.append(Paragraph("Text Books:", heading_style))
-    for i, book in enumerate(data['textbooks'].split('\n'), start = 1):
-        elements.append(Paragraph(f"{i} {book}", normal_style))
+    for i, book in enumerate(data['textbooks'].split('\n'), start=1):
+        elements.append(Paragraph(f"{i}. {book}", normal_style))
     elements.append(Spacer(1, 12))
 
     # References
     elements.append(Paragraph("Reference Books:", heading_style))
-    for i, ref in enumerate(data['references'].split('\n'), start = 1):
-        elements.append(Paragraph(f"{i} {ref}", normal_style))
+    for i, ref in enumerate(data['references'].split('\n'), start=1):
+        elements.append(Paragraph(f"{i}. {ref}", normal_style))
     elements.append(Spacer(1, 12))
 
-    # Build PDF
-    pdf.build(elements)
+    try:
+        pdf.build(elements)
+    except Exception as e:
+        print(f"Error generating PDF: {e}")
+        return {"error": "Error generating PDF"}, 500
 
     # Send PDF file as response
     buffer.seek(0)
     filename = f"{data['courseCode'].upper()}.pdf"
     return send_file(buffer, as_attachment=True, download_name=filename, mimetype='application/pdf')
-
 
 if __name__ == "__main__":
     app.run(debug=True)

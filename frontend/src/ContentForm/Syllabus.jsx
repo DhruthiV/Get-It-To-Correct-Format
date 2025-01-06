@@ -1,31 +1,28 @@
-import React, { useState } from "react";
-import { Form, Button, Collapse, Container, Row, Col } from "react-bootstrap";
+import React, { useState } from 'react';
+import { Form, Button, Collapse, Container, Row, Col } from 'react-bootstrap';
 
-function Syllabus({ onSubmit }) {
+const Syllabus = ({ onSubmit }) => {
   const [formOpen, setFormOpen] = useState(true); // Default to expanded
-  const [formData, setFormData] = useState({
-    unit1: "",
-    unit1EL: "",
-    unit2: "",
-    unit2EL: "",
-    unit3: "",
-    unit3EL: "",
-    unit4: "",
-    unit4EL: "",
-  });
+  const [syllabus, setSyllabus] = useState([
+    { title: '', description: '', experientialLearning: '' },
+    { title: '', description: '', experientialLearning: '' },
+    { title: '', description: '', experientialLearning: '' },
+    { title: '', description: '', experientialLearning: '' },
+  ]);
 
-  function handleChange(e) {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  }
+  const handleChange = (index, field, value) => {
+    const updatedSyllabus = [...syllabus];
+    updatedSyllabus[index][field] = value;
+    setSyllabus(updatedSyllabus);
+  };
 
-  function handleFormSubmit(e) {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData); // Send form data to the parent component
-  }
+    onSubmit(syllabus); // Send syllabus data to parent
+  };
 
   return (
-    <Container className="d-flex justify-content-center align-items-center" style={{ paddingTop: "10px" }}>
+    <Container className="d-flex justify-content-center align-items-center" style={{ paddingTop: '10px' }}>
       <Row className="w-100">
         <Col>
           <div className="d-flex justify-content-between align-items-center mb-3">
@@ -36,117 +33,50 @@ function Syllabus({ onSubmit }) {
               aria-controls="syllabus-form"
               aria-expanded={formOpen}
             >
-              {formOpen ? "Shrink" : "Expand"}
+              {formOpen ? 'Shrink' : 'Expand'}
             </Button>
           </div>
           <Collapse in={formOpen}>
             <div id="syllabus-form">
               <Form onSubmit={handleFormSubmit}>
-                {/* Unit 1 */}
-                <Form.Group className="form-group" controlId="unit1">
-                  <Form.Label>Unit 1</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    name="unit1"
-                    value={formData.unit1}
-                    onChange={handleChange}
-                    placeholder="Enter Unit 1 content"
-                  />
-                </Form.Group>
+                {syllabus.map((unit, index) => (
+                  <div key={index} className="mb-4">
+                    <Form.Group controlId={`unitTitle${index}`} className="form-group">
+                      <Form.Label>Unit {index + 1} Title</Form.Label>
+                      <Form.Control
+                        type="text"
+                        value={unit.title}
+                        onChange={(e) => handleChange(index, 'title', e.target.value)}
+                        placeholder={`Enter Unit ${index + 1} Title`}
+                      />
+                    </Form.Group>
 
-                {/* Unit 1 EL */}
-                <Form.Group className="form-group" controlId="unit1EL">
-                  <Form.Label>Unit 1 EL</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    name="unit1EL"
-                    value={formData.unit1EL}
-                    onChange={handleChange}
-                    placeholder="Enter Unit 1 EL content"
-                  />
-                </Form.Group>
+                    <Form.Group controlId={`unitDescription${index}`} className="form-group">
+                      <Form.Label>Unit {index + 1} Description</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        rows={3}
+                        value={unit.description}
+                        onChange={(e) => handleChange(index, 'description', e.target.value)}
+                        placeholder={`Enter Unit ${index + 1} Description`}
+                      />
+                    </Form.Group>
 
-                {/* Unit 2 */}
-                <Form.Group className="form-group" controlId="unit2">
-                  <Form.Label>Unit 2</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    name="unit2"
-                    value={formData.unit2}
-                    onChange={handleChange}
-                    placeholder="Enter Unit 2 content"
-                  />
-                </Form.Group>
-
-                {/* Unit 2 EL */}
-                <Form.Group className="form-group" controlId="unit2EL">
-                  <Form.Label>Unit 2 EL</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    name="unit2EL"
-                    value={formData.unit2EL}
-                    onChange={handleChange}
-                    placeholder="Enter Unit 2 EL content"
-                  />
-                </Form.Group>
-
-                {/* Unit 3 */}
-                <Form.Group className="form-group" controlId="unit3">
-                  <Form.Label>Unit 3</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    name="unit3"
-                    value={formData.unit3}
-                    onChange={handleChange}
-                    placeholder="Enter Unit 3 content"
-                  />
-                </Form.Group>
-
-                {/* Unit 3 EL */}
-                <Form.Group className="form-group" controlId="unit3EL">
-                  <Form.Label>Unit 3 EL</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    name="unit3EL"
-                    value={formData.unit3EL}
-                    onChange={handleChange}
-                    placeholder="Enter Unit 3 EL content"
-                  />
-                </Form.Group>
-
-                {/* Unit 4 */}
-                <Form.Group className="form-group" controlId="unit4">
-                  <Form.Label>Unit 4</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    name="unit4"
-                    value={formData.unit4}
-                    onChange={handleChange}
-                    placeholder="Enter Unit 4 content"
-                  />
-                </Form.Group>
-
-                {/* Unit 4 EL */}
-                <Form.Group className="form-group" controlId="unit4EL">
-                  <Form.Label>Unit 4 EL</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    name="unit4EL"
-                    value={formData.unit4EL}
-                    onChange={handleChange}
-                    placeholder="Enter Unit 4 EL content"
-                  />
-                </Form.Group>
-
-                <Button variant="primary" type="submit">Submit</Button>
+                    <Form.Group controlId={`unitEL${index}`} className="form-group">
+                      <Form.Label>Unit {index + 1} Experiential Learning</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        rows={3}
+                        value={unit.experientialLearning}
+                        onChange={(e) => handleChange(index, 'experientialLearning', e.target.value)}
+                        placeholder={`Enter Unit ${index + 1} Experiential Learning`}
+                      />
+                    </Form.Group>
+                  </div>
+                ))}
+                <Button variant="primary" type="submit">
+                  Submit
+                </Button>
               </Form>
             </div>
           </Collapse>
@@ -154,6 +84,6 @@ function Syllabus({ onSubmit }) {
       </Row>
     </Container>
   );
-}
+};
 
 export default Syllabus;

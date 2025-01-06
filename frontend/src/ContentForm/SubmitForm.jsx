@@ -19,12 +19,12 @@ const SubmitForm = ({ courseData, syllabusData }) => {
     }
 
     // Validate syllabus data
-    const syllabusValid = Object.keys(syllabusData).every(
-      key => syllabusData[key].trim() !== ''
+    const syllabusValid = syllabusData.every(
+      (unit) => unit.title.trim() !== '' && unit.description.trim() !== '' && unit.hours.trim() !== ''
     );
 
     if (!syllabusValid) {
-      setError('All syllabus fields must be filled!');
+      setError('All syllabus fields including hours must be filled!');
       setLoading(false);
       return;
     }
@@ -37,10 +37,11 @@ const SubmitForm = ({ courseData, syllabusData }) => {
       objectives: courseData.objectives,
       outcomes: courseData.outcomes,
       overview: courseData.overview,
-      syllabus: Object.keys(syllabusData).map((unitKey, index) => ({
-        title: `Unit ${index + 1}: ${unitKey.replace(/([A-Z])/g, ' $1')}`,
-        description: syllabusData[unitKey],
-        experiential_learning: syllabusData[`${unitKey}EL`] || '',
+      syllabus: syllabusData.map((unit, index) => ({
+        title: `Unit ${index + 1}: ${unit.title}`,
+        description: unit.description,
+        experientialLearning: unit.experientialLearning || '',
+        hours: unit.hours
       })),
       textbooks: courseData.textbooks,
       references: courseData.references,
